@@ -6,19 +6,22 @@
   <title>대표업무 최적화 대시보드</title>
   <style>
     :root{
-      --bg:#f6f7fb;
+      --bg:#f7f9fc;
       --panel:#ffffff;
-      --line:#e8ebf2;
-      --text:#1f2937;
-      --muted:#6b7280;
-      --brand:#2563eb;
-      --brand-soft:#eaf2ff;
-      --green:#16a34a;
-      --yellow:#d97706;
-      --red:#dc2626;
-      --purple:#7c3aed;
-      --shadow:0 10px 30px rgba(15,23,42,.06);
-      --radius:18px;
+      --line:#e3e8f0;
+      --text:#202124;
+      --muted:#5f6368;
+      --brand:#1a73e8;
+      --brand-soft:#e8f0fe;
+      --brand-soft-2:#f1f6ff;
+      --green:#34a853;
+      --yellow:#f9ab00;
+      --red:#ea4335;
+      --purple:#a142f4;
+      --mint:#d7f3e3;
+      --coral:#fde7e9;
+      --shadow:0 12px 32px rgba(60,64,67,.08);
+      --radius:20px;
     }
     *{box-sizing:border-box}
     html{scroll-behavior:smooth}
@@ -31,7 +34,7 @@
     .app{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
     .sidebar{
       position:sticky;top:0;height:100vh;overflow:auto;
-      padding:24px 18px;background:#fbfcff;border-right:1px solid var(--line)
+      padding:24px 18px;background:linear-gradient(180deg,#eef3fd 0%,#f8fbff 100%);border-right:1px solid var(--line)
     }
     .brand{padding:8px 10px 18px}
     .brand h1{margin:0;font-size:20px;line-height:1.3}
@@ -42,16 +45,16 @@
       display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);
       padding:10px 12px;border-radius:12px;font-size:14px;margin:4px 0
     }
-    .nav a:hover,.nav a.active{background:var(--brand-soft);color:var(--brand);font-weight:700}
+    .nav a:hover,.nav a.active{background:var(--brand-soft);color:var(--brand);font-weight:700;box-shadow:inset 0 0 0 1px rgba(26,115,232,.08)}
     .main{padding:28px}
     .hero{
-      background:linear-gradient(135deg,#ffffff,#eef4ff);
-      border:1px solid var(--line);border-radius:24px;padding:28px;box-shadow:var(--shadow);margin-bottom:18px
+      background:linear-gradient(135deg,#ffffff 0%,#edf4ff 58%,#eafaf2 100%);
+      border:1px solid var(--line);border-radius:28px;padding:28px;box-shadow:var(--shadow);margin-bottom:18px
     }
     .hero h2{margin:0 0 10px;font-size:30px}
     .hero p{margin:0;color:var(--muted);line-height:1.6}
     .chip-wrap{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
-    .chip{padding:8px 12px;border-radius:999px;background:#fff;border:1px solid var(--line);font-size:13px;color:var(--muted)}
+    .chip{padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.9);border:1px solid #d7e3fd;font-size:13px;color:var(--muted)}
     .grid{display:grid;gap:16px}
     .kpi{grid-template-columns:repeat(6,minmax(0,1fr));margin-bottom:18px}
     .split{grid-template-columns:1.25fr .95fr;align-items:start;margin-bottom:18px}
@@ -59,7 +62,7 @@
     .section{margin-bottom:18px}
     .section h3{margin:0 0 12px;font-size:22px}
     .card{
-      background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+      background:linear-gradient(180deg,#ffffff 0%,#fbfdff 100%);border:1px solid var(--line);border-radius:var(--radius);
       box-shadow:var(--shadow);padding:18px
     }
     .kpi .card h4{margin:0 0 10px;color:var(--muted);font-size:13px}
@@ -78,10 +81,10 @@
     .task-meta{font-size:13px;color:var(--muted);display:flex;gap:10px;flex-wrap:wrap}
     .task-body{padding:0 18px 18px;border-top:1px solid var(--line);background:#fcfdff}
     .badge{display:inline-flex;align-items:center;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:800;white-space:nowrap}
-    .critical{background:#fee2e2;color:var(--red)}
-    .high{background:#ffedd5;color:var(--yellow)}
-    .medium{background:#dbeafe;color:var(--brand)}
-    .low{background:#dcfce7;color:var(--green)}
+    .critical{background:var(--coral);color:var(--red)}
+    .high{background:#fff1d6;color:#c67c00}
+    .medium{background:var(--brand-soft);color:var(--brand)}
+    .low{background:var(--mint);color:var(--green)}
     .pill{padding:4px 8px;border:1px solid var(--line);border-radius:999px;background:#fff;font-size:12px;color:var(--muted)}
     table{width:100%;border-collapse:collapse;font-size:14px}
     th,td{padding:12px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
@@ -90,7 +93,7 @@
     .mini{font-size:13px;color:var(--muted);line-height:1.6}
     .menu-card{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
     .menu-link{display:block;text-decoration:none;color:inherit;border:1px solid var(--line);border-radius:16px;padding:16px;background:#fff}
-    .menu-link:hover{border-color:#c9d7ff;background:#f8fbff}
+    .menu-link:hover{border-color:#c7dafc;background:linear-gradient(180deg,#f8fbff 0%,#f1f7ff 100%)}
     .menu-link strong{display:block;margin-bottom:6px}
     .footer-note{margin-top:10px;color:var(--muted);font-size:12px}
     @media (max-width:1200px){.kpi,.split,.triple,.menu-card{grid-template-columns:1fr 1fr}.app{grid-template-columns:1fr}.sidebar{position:relative;height:auto}}
