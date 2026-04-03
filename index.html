@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>대표업무 최적화 대시보드 v1</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: #121935;
+      --panel-2: #1a2347;
+      --text: #eaf0ff;
+      --muted: #9fb0de;
+      --line: rgba(255,255,255,.08);
+      --blue: #5aa9ff;
+      --green: #39d98a;
+      --yellow: #ffcc66;
+      --red: #ff6b7a;
+      --purple: #a78bfa;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, Pretendard, system-ui, -apple-system, sans-serif;
+      background: linear-gradient(180deg, #0b1020 0%, #0f1730 100%);
+      color: var(--text);
+    }
+    .wrap { max-width: 1440px; margin: 0 auto; padding: 32px; }
+    h1 { margin: 0 0 8px; font-size: 32px; }
+    p.lead { margin: 0 0 24px; color: var(--muted); }
+    .meta { display:flex; gap:12px; flex-wrap: wrap; margin-bottom: 24px; }
+    .chip { padding:8px 12px; border-radius:999px; background:rgba(255,255,255,.06); color:var(--muted); border:1px solid var(--line); font-size:13px; }
+    .grid { display:grid; gap:16px; }
+    .kpi { grid-template-columns: repeat(6, minmax(0,1fr)); margin-bottom: 16px; }
+    .two { grid-template-columns: 1.4fr 1fr; margin-bottom: 16px; }
+    .three { grid-template-columns: repeat(3, minmax(0,1fr)); margin-bottom: 16px; }
+    .card {
+      background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.18);
+    }
+    .card h2, .card h3 { margin:0 0 12px; }
+    .kpi .card h3 { font-size: 13px; color: var(--muted); font-weight: 600; }
+    .num { font-size: 34px; font-weight: 800; letter-spacing: -.03em; }
+    .sub { color: var(--muted); font-size: 12px; margin-top: 8px; }
+    .list { display:grid; gap:10px; }
+    .item {
+      background: var(--panel-2);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px 14px;
+    }
+    .row { display:flex; justify-content:space-between; gap:10px; align-items:center; }
+    .title { font-weight: 700; }
+    .desc { color: var(--muted); font-size: 13px; margin-top: 4px; }
+    .badge { padding: 6px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; }
+    .critical { background: rgba(255,107,122,.16); color: #ff9aa6; }
+    .high { background: rgba(255,204,102,.16); color: #ffd58a; }
+    .medium { background: rgba(90,169,255,.16); color: #97c9ff; }
+    .low { background: rgba(57,217,138,.16); color: #8ce6b7; }
+    table { width:100%; border-collapse: collapse; font-size:14px; }
+    th, td { padding: 11px 10px; border-bottom: 1px solid var(--line); text-align:left; vertical-align: top; }
+    th { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+    tr:last-child td { border-bottom: 0; }
+    .pill { display:inline-block; padding:5px 8px; border-radius:999px; font-size:12px; border:1px solid var(--line); }
+    .section-note { color: var(--muted); font-size: 13px; margin-top:8px; }
+    .footer { margin-top: 20px; color: var(--muted); font-size: 13px; }
+    @media (max-width: 1100px) {
+      .kpi, .two, .three { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>대표업무 최적화 대시보드 v1</h1>
+    <p class="lead">경영지원 자동화 전략서 · 7일 성공안 · CEO Ops Dashboard Spec을 바탕으로 만든 대표 관제판 초안</p>
+    <div class="meta">
+      <span class="chip">핵심 원칙: 대표 입력 최소화</span>
+      <span class="chip">관제: DEO</span>
+      <span class="chip">실무 우선: MAX</span>
+      <span class="chip">검토/보조: OFFICE · MINA</span>
+    </div>
+
+    <section class="grid kpi">
+      <div class="card"><h3>오늘 마감</h3><div class="num">3</div><div class="sub">정부과제 1 · 계약 1 · 세무 1</div></div>
+      <div class="card"><h3>이번 주 마감</h3><div class="num">8</div><div class="sub">D-7 이내 업무</div></div>
+      <div class="card"><h3>Critical 리스크</h3><div class="num">2</div><div class="sub">증빙/승인 누락 가능성</div></div>
+      <div class="card"><h3>승인 대기</h3><div class="num">5</div><div class="sub">대표 승인 필요</div></div>
+      <div class="card"><h3>증빙 누락</h3><div class="num">4</div><div class="sub">재무/정부지원 혼합</div></div>
+      <div class="card"><h3>48h 무업데이트</h3><div class="num">1</div><div class="sub">예외 보드 확인 필요</div></div>
+    </section>
+
+    <section class="grid two">
+      <div class="card">
+        <h2>Today Board</h2>
+        <div class="list">
+          <div class="item">
+            <div class="row"><div class="title">오늘 해야 할 일 1 — 정부지원사업 제출 패키지 검수</div><span class="badge critical">Critical</span></div>
+            <div class="desc">증빙 누락 여부와 제출 직전 체크리스트 확인</div>
+          </div>
+          <div class="item">
+            <div class="row"><div class="title">오늘 승인할 것 1 — 구매/지출 품의 2건</div><span class="badge high">High</span></div>
+            <div class="desc">예산 대조 완료 후 대표 승인만 남은 상태</div>
+          </div>
+          <div class="item">
+            <div class="row"><div class="title">오늘 위험한 것 1 — 계약 만료 D-3</div><span class="badge high">High</span></div>
+            <div class="desc">갱신 여부 미확정 시 서비스 공백 가능성</div>
+          </div>
+        </div>
+        <div class="section-note">대표는 오늘 승인할 것 · 놓치면 사고 나는 것 · DEO/피스가 대신 못 하는 것만 우선 확인</div>
+      </div>
+      <div class="card">
+        <h2>7일 실행 우선순위</h2>
+        <table>
+          <thead><tr><th>우선순위</th><th>과제</th><th>효과</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>영수증 OCR → 지출 시트 자동입력 → 런웨이 계산</td><td>현금흐름 즉시 가시화</td></tr>
+            <tr><td>2</td><td>표준문서 자동생성 3종</td><td>반복 문서 작성 제거</td></tr>
+            <tr><td>3</td><td>마감·계약·정부지원 자동알림</td><td>누락/지연 방지</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="grid three">
+      <div class="card">
+        <h2>Government Grant Board</h2>
+        <table>
+          <thead><tr><th>사업명</th><th>단계</th><th>마감</th><th>담당</th></tr></thead>
+          <tbody>
+            <tr><td>2026 혁신바우처</td><td><span class="pill">검수</span></td><td>D-2</td><td>OFFICE</td></tr>
+            <tr><td>지역특화 R&D</td><td><span class="pill">작성</span></td><td>D-5</td><td>MAX</td></tr>
+            <tr><td>수출바우처</td><td><span class="pill">접수완료</span></td><td>-</td><td>DEO</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card">
+        <h2>Finance / Ops Board</h2>
+        <table>
+          <thead><tr><th>업무</th><th>주기</th><th>상태</th><th>알림</th></tr></thead>
+          <tbody>
+            <tr><td>세무 신고</td><td>월간</td><td>In Progress</td><td>D-7</td></tr>
+            <tr><td>급여 검토</td><td>월간</td><td>Waiting Approval</td><td>D-3</td></tr>
+            <tr><td>구매 갱신</td><td>수시</td><td>Blocked</td><td>D-1</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card">
+        <h2>Exception Board</h2>
+        <div class="list">
+          <div class="item">
+            <div class="row"><div class="title">정부지원사업 제출본 증빙 누락 가능성</div><span class="badge critical">Critical</span></div>
+            <div class="desc">대표 승인 전 증빙 파일 체크 필요</div>
+          </div>
+          <div class="item">
+            <div class="row"><div class="title">계약 갱신 여부 미정</div><span class="badge high">High</span></div>
+            <div class="desc">오늘 안 정하면 서비스 중단 리스크</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid two">
+      <div class="card">
+        <h2>경영지원 자동화 도메인</h2>
+        <table>
+          <thead><tr><th>도메인</th><th>자동화 대상</th></tr></thead>
+          <tbody>
+            <tr><td>공통 운영</td><td>문서 초안, 회의록, 일정 조율, KPI 취합, 보고서 생성</td></tr>
+            <tr><td>재무/구매</td><td>지출 품의, 예산 대조, 증빙 누락 검출, 지급 일정, 반복 결제 모니터링</td></tr>
+            <tr><td>인사/조직</td><td>채용 공고, 인터뷰 일정, 온보딩, 휴가/근태 응답, 교육 이수 추적</td></tr>
+            <tr><td>법무/컴플라이언스</td><td>NDA/계약서 초안, 조항 비교, 리스크 하이라이트, 갱신일 알림</td></tr>
+            <tr><td>총무/운영지원</td><td>자산 요청/회수, 비품 구매, 시설 이슈, 출입/계정 요청</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card">
+        <h2>에이전트 운영 구조</h2>
+        <table>
+          <thead><tr><th>역할</th><th>기능</th></tr></thead>
+          <tbody>
+            <tr><td>Intake</td><td>이메일/메신저/폼/ERP 이벤트 수집, 분류, 긴급도 태깅</td></tr>
+            <tr><td>Policy</td><td>사규/운영규정/승인권한 조회</td></tr>
+            <tr><td>Workflow</td><td>업무 분해, 승인 흐름 설계, 배정</td></tr>
+            <tr><td>Drafting</td><td>품의서/계약/메일/보고서 초안 작성</td></tr>
+            <tr><td>Verification</td><td>누락/충돌/정책 위반 검토</td></tr>
+            <tr><td>Approval / Execution / Audit</td><td>승인 요청, 실제 실행, 감사 로그 기록</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="footer">v1 초안 · 파일 기반 목업 · 다음 단계: 실제 데이터 연결, 시트 연동, 상태 자동 집계</div>
+  </div>
+</body>
+</html>
