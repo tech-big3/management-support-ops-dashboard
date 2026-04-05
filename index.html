@@ -636,13 +636,135 @@ tr:hover td{background:#f8faff}
     <div class="page" id="page-grants">
       <div class="section-title">📑 지원사업 <span>Government Grants</span></div>
 
+      <!-- 서브탭 -->
+      <div style="display:flex;gap:8px;margin-bottom:20px;border-bottom:2px solid var(--border);padding-bottom:0;overflow-x:auto;">
+        <button class="grant-tab active" onclick="switchGrantTab('search',this)" style="padding:10px 18px;border:none;background:none;font-size:14px;font-weight:700;color:var(--brand);border-bottom:3px solid var(--brand);cursor:pointer;white-space:nowrap;margin-bottom:-2px">🔍 지원사업 서치</button>
+        <button class="grant-tab" onclick="switchGrantTab('eligibility',this)" style="padding:10px 18px;border:none;background:none;font-size:14px;font-weight:600;color:var(--muted);border-bottom:3px solid transparent;cursor:pointer;white-space:nowrap;margin-bottom:-2px">✅ 적합도 판단</button>
+        <button class="grant-tab" onclick="switchGrantTab('docs',this)" style="padding:10px 18px;border:none;background:none;font-size:14px;font-weight:600;color:var(--muted);border-bottom:3px solid transparent;cursor:pointer;white-space:nowrap;margin-bottom:-2px">📋 서류 준비</button>
+        <button class="grant-tab" onclick="switchGrantTab('draft',this)" style="padding:10px 18px;border:none;background:none;font-size:14px;font-weight:600;color:var(--muted);border-bottom:3px solid transparent;cursor:pointer;white-space:nowrap;margin-bottom:-2px">✍️ 초안 작성</button>
+      </div>
+
+      <!-- ① 서치 -->
+      <div id="grant-search" class="grant-section">
+        <div class="card mb16">
+          <div class="card-body">
+            <input id="grant-search-input" type="text" placeholder="지원사업명, 기관명 검색..." oninput="filterGrants()" style="width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:10px;font-size:15px;outline:none;font-family:inherit;transition:border .15s" onfocus="this.style.borderColor='var(--brand)'" onblur="this.style.borderColor='var(--border)'">
+          </div>
+        </div>
+        <div id="grant-cards" class="grid cols-2"></div>
+      </div>
+
+      <!-- ② 적합도 -->
+      <div id="grant-eligibility" class="grant-section" style="display:none">
+        <div class="card">
+          <div class="card-header"><h3>내 스타트업 적합도 체크</h3><span class="card-action" onclick="resetEligibility()">초기화</span></div>
+          <div class="card-body">
+            <div id="elig-list" style="display:flex;flex-direction:column;gap:14px;margin-bottom:20px">
+              <label style="display:flex;align-items:center;gap:12px;cursor:pointer;padding:14px;border:1.5px solid var(--border);border-radius:10px;transition:all .12s" onmouseover="this.style.borderColor='var(--brand)'" onmouseout="this.style.borderColor='var(--border)'">
+                <input type="checkbox" class="elig-check" onchange="calcEligibility()" style="width:20px;height:20px;cursor:pointer;accent-color:var(--brand)">
+                <div><div style="font-weight:700">업력 3년 미만</div><div style="font-size:12px;color:var(--muted)">창업 후 3년 이하 기업에 우선 지원</div></div>
+              </label>
+              <label style="display:flex;align-items:center;gap:12px;cursor:pointer;padding:14px;border:1.5px solid var(--border);border-radius:10px;transition:all .12s" onmouseover="this.style.borderColor='var(--brand)'" onmouseout="this.style.borderColor='var(--border)'">
+                <input type="checkbox" class="elig-check" onchange="calcEligibility()" style="width:20px;height:20px;cursor:pointer;accent-color:var(--brand)">
+                <div><div style="font-weight:700">연 매출 10억 이하</div><div style="font-size:12px;color:var(--muted)">중소기업 매출 기준 충족</div></div>
+              </label>
+              <label style="display:flex;align-items:center;gap:12px;cursor:pointer;padding:14px;border:1.5px solid var(--border);border-radius:10px;transition:all .12s" onmouseover="this.style.borderColor='var(--brand)'" onmouseout="this.style.borderColor='var(--border)'">
+                <input type="checkbox" class="elig-check" onchange="calcEligibility()" style="width:20px;height:20px;cursor:pointer;accent-color:var(--brand)">
+                <div><div style="font-weight:700">서울/수도권 소재</div><div style="font-size:12px;color:var(--muted)">수도권 소재 기업 지원 가능</div></div>
+              </label>
+              <label style="display:flex;align-items:center;gap:12px;cursor:pointer;padding:14px;border:1.5px solid var(--border);border-radius:10px;transition:all .12s" onmouseover="this.style.borderColor='var(--brand)'" onmouseout="this.style.borderColor='var(--border)'">
+                <input type="checkbox" class="elig-check" onchange="calcEligibility()" style="width:20px;height:20px;cursor:pointer;accent-color:var(--brand)">
+                <div><div style="font-weight:700">IT/SW/디지털 업종</div><div style="font-size:12px;color:var(--muted)">디지털 전환 관련 업종 우대</div></div>
+              </label>
+              <label style="display:flex;align-items:center;gap:12px;cursor:pointer;padding:14px;border:1.5px solid var(--border);border-radius:10px;transition:all .12s" onmouseover="this.style.borderColor='var(--brand)'" onmouseout="this.style.borderColor='var(--border)'">
+                <input type="checkbox" class="elig-check" onchange="calcEligibility()" style="width:20px;height:20px;cursor:pointer;accent-color:var(--brand)">
+                <div><div style="font-weight:700">고용 5인 이상</div><div style="font-size:12px;color:var(--muted)">정규직 기준 5인 이상 고용</div></div>
+              </label>
+              <label style="display:flex;align-items:center;gap:12px;cursor:pointer;padding:14px;border:1.5px solid var(--border);border-radius:10px;transition:all .12s" onmouseover="this.style.borderColor='var(--brand)'" onmouseout="this.style.borderColor='var(--border)'">
+                <input type="checkbox" class="elig-check" onchange="calcEligibility()" style="width:20px;height:20px;cursor:pointer;accent-color:var(--brand)">
+                <div><div style="font-weight:700">기술등급 우수 (벤처/이노비즈)</div><div style="font-size:12px;color:var(--muted)">벤처기업 확인 또는 이노비즈 인증</div></div>
+              </label>
+            </div>
+            <div id="elig-result" style="padding:20px;border-radius:12px;text-align:center;background:#f8f9fb">
+              <div style="font-size:13px;color:var(--muted)">위 항목을 체크하면 적합도가 계산됩니다</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ③ 서류 준비 -->
+      <div id="grant-docs" class="grant-section" style="display:none">
+        <div class="card">
+          <div class="card-header">
+            <h3>서류 준비 현황</h3>
+            <button onclick="genDraftModal()" style="padding:8px 14px;background:var(--brand);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer">⚡ 초안 자동생성</button>
+          </div>
+          <div class="card-body">
+            <div id="doc-progress-wrap" style="margin-bottom:16px">
+              <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span>전체 준비율</span><span id="doc-pct">0%</span></div>
+              <div style="height:8px;background:var(--border);border-radius:999px;overflow:hidden"><div id="doc-bar" style="height:100%;border-radius:999px;background:var(--brand);transition:width .4s;width:0%"></div></div>
+            </div>
+            <div id="doc-list" style="display:flex;flex-direction:column;gap:10px"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ④ 초안 작성 -->
+      <div id="grant-draft" class="grant-section" style="display:none">
+        <div class="card">
+          <div class="card-header"><h3>사업계획서 초안 작성</h3><button onclick="copyAllDraft()" style="padding:8px 14px;background:#f1f3f4;color:var(--text);border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer">📋 전체 복사</button></div>
+          <div class="card-body" style="display:flex;flex-direction:column;gap:20px">
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+                <label style="font-weight:700;font-size:13px">1. 회사 소개</label>
+                <button onclick="fillDraft('draft-company','[회사명]은 [기술/서비스 한 줄 설명] 스타트업입니다.\n창립 연도: [YYYY]년 | 대표: [성명] | 소재지: 서울 [구]\n핵심 역량: AI 기반 경영지원 자동화, 문서 처리 자동화\n현재 팀 규모: [N]명 (개발 [N]명, 영업 [N]명, 운영 [N]명)')" style="padding:5px 10px;background:var(--brand-soft);color:var(--brand);border:none;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer">AI 예시 채우기</button>
+              </div>
+              <textarea id="draft-company" rows="5" placeholder="회사 소개를 입력하세요..." style="width:100%;padding:12px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:inherit;resize:vertical;outline:none" onfocus="this.style.borderColor='var(--brand)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+                <label style="font-weight:700;font-size:13px">2. 기술 / 서비스 개요</label>
+                <button onclick="fillDraft('draft-tech','본 서비스는 AI 에이전트 기반 경영지원 자동화 플랫폼입니다.\n핵심 기술: LLM 기반 문서 자동 생성, 지원사업 적합도 분석, 승인 워크플로 자동화\n차별성: 단순 챗봇이 아닌 실제 업무 실행 레이어까지 연결\n현재 개발 단계: MVP 완성, 파일럿 3개사 운영 중')" style="padding:5px 10px;background:var(--brand-soft);color:var(--brand);border:none;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer">AI 예시 채우기</button>
+              </div>
+              <textarea id="draft-tech" rows="5" placeholder="기술/서비스 개요를 입력하세요..." style="width:100%;padding:12px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:inherit;resize:vertical;outline:none" onfocus="this.style.borderColor='var(--brand)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+                <label style="font-weight:700;font-size:13px">3. 시장 분석</label>
+                <button onclick="fillDraft('draft-market','[목표 시장] 시장 규모: 약 [N]조원 (2025년 기준)\n연평균 성장률(CAGR): [N]% (2025~2030)\n주요 고객군: 직원 10~50인 스타트업/중소기업 CEO\n경쟁사 대비 우위: 가격 40% 낮음, 도입 기간 1/3 단축\n타깃 확보 계획: B2B SaaS 구독 + 지자체 연계 바우처')" style="padding:5px 10px;background:var(--brand-soft);color:var(--brand);border:none;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer">AI 예시 채우기</button>
+              </div>
+              <textarea id="draft-market" rows="5" placeholder="시장 분석을 입력하세요..." style="width:100%;padding:12px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:inherit;resize:vertical;outline:none" onfocus="this.style.borderColor='var(--brand)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+                <label style="font-weight:700;font-size:13px">4. 자금 사용 계획</label>
+                <button onclick="fillDraft('draft-fund','총 요청 금액: [N]만원\n\n사용 계획:\n- 인건비 (개발자 2명 6개월): [N]만원 ([N]%)\n- 서버/인프라 구축: [N]만원 ([N]%)\n- 마케팅/영업: [N]만원 ([N]%)\n- 기타 운영비: [N]만원 ([N]%)\n\n기대 효과: 지원금 소진 후 [N]개월 내 손익분기점 달성')" style="padding:5px 10px;background:var(--brand-soft);color:var(--brand);border:none;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer">AI 예시 채우기</button>
+              </div>
+              <textarea id="draft-fund" rows="5" placeholder="자금 사용 계획을 입력하세요..." style="width:100%;padding:12px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:inherit;resize:vertical;outline:none" onfocus="this.style.borderColor='var(--brand)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 모달 -->
+      <div id="draft-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;align-items:center;justify-content:center">
+        <div style="background:#fff;border-radius:16px;padding:24px;max-width:600px;width:90%;max-height:80vh;overflow-y:auto">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+            <h3 style="font-size:16px;font-weight:800">📄 사업계획서 초안 자동생성</h3>
+            <button onclick="document.getElementById('draft-modal').style.display='none'" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted)">✕</button>
+          </div>
+          <div id="modal-content" style="font-size:13px;line-height:1.8;color:var(--text);white-space:pre-wrap;background:#f8f9fb;padding:16px;border-radius:10px;margin-bottom:16px"></div>
+          <button onclick="copyModalContent()" style="width:100%;padding:12px;background:var(--brand);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer">📋 복사하기</button>
+        </div>
+      </div>
+
       <div class="grid cols-3 mb16">
         <div class="card kpi-card blue"><div class="kpi-label">진행 중</div><div class="kpi-num" style="color:var(--brand)">3</div><div class="kpi-sub">검토/제출 단계</div></div>
         <div class="card kpi-card red"><div class="kpi-label">D-15 이내 마감</div><div class="kpi-num" style="color:var(--red)">2</div><div class="kpi-sub">즉시 준비 필요</div></div>
         <div class="card kpi-card green"><div class="kpi-label">이번달 완료</div><div class="kpi-num" style="color:var(--green)">1</div><div class="kpi-sub">접수번호 보관</div></div>
       </div>
 
-      <div class="card mb16">
+      <div class="card mb16" style="display:none">
         <div class="card-header"><h3>진행 중 지원사업</h3><span class="card-action">+ 신규 추가</span></div>
         <div class="task-list">
           <div class="task-item" onclick="toggleDetail(this)">
@@ -713,7 +835,7 @@ tr:hover td{background:#f8faff}
         </div>
       </div>
 
-      <div class="card">
+      <div class="card" style="display:none">
         <div class="card-header"><h3>제출 체크리스트 (표준)</h3></div>
         <div class="card-body">
           <table>
@@ -1078,6 +1200,210 @@ function toggleDetail(item){
   const open = detail.style.display === 'block';
   detail.style.display = open ? 'none' : 'block';
 }
+
+// ==================== GRANT FUNCTIONS ====================
+
+// Grant data
+const GRANTS = [
+  {name:'TIPS (팁스)',org:'중소벤처기업부',max:'최대 5억원',deadline:'2026-12-31',type:'기술개발',tag:'투자연계'},
+  {name:'창업도약패키지',org:'창업진흥원',max:'최대 3억원',deadline:'2026-05-31',type:'성장지원',tag:'초기창업'},
+  {name:'BIG3 혁신바우처',org:'산업통상자원부',max:'최대 2억원',deadline:'2026-04-30',type:'바우처',tag:'제조/IT'},
+  {name:'비대면서비스 바우처',org:'중소벤처기업부',max:'최대 4,000만원',deadline:'2026-06-30',type:'바우처',tag:'디지털전환'},
+  {name:'청년창업사관학교',org:'중소기업진흥공단',max:'최대 1억원',deadline:'2026-04-20',type:'창업지원',tag:'청년'},
+  {name:'K-스타트업 그랜드챌린지',org:'창업진흥원',max:'최대 1억원',deadline:'2026-07-31',type:'글로벌',tag:'해외진출'},
+  {name:'소상공인 디지털전환 바우처',org:'소상공인시장진흥공단',max:'최대 2,000만원',deadline:'2026-04-06',type:'바우처',tag:'디지털'},
+  {name:'스마트공장 구축지원',org:'중소벤처기업부',max:'최대 5,000만원',deadline:'2026-05-15',type:'제조혁신',tag:'스마트'},
+  {name:'수출바우처',org:'KOTRA',max:'최대 1억원',deadline:'2026-06-30',type:'수출지원',tag:'글로벌'},
+  {name:'중소기업 R&D 지원',org:'중소기업기술정보진흥원',max:'최대 2억원',deadline:'2026-05-31',type:'R&D',tag:'기술개발'},
+  {name:'혁신창업사업화',org:'중소기업진흥공단',max:'최대 5천만원',deadline:'2026-06-15',type:'사업화',tag:'창업'},
+  {name:'청년전용 창업자금',org:'중소기업진흥공단',max:'최대 1억원',deadline:'2026-12-31',type:'정책자금',tag:'청년금융'}
+];
+
+function calcDday(dateStr){
+  const diff = Math.ceil((new Date(dateStr)-new Date())/(1000*60*60*24));
+  if(diff<0) return {text:'마감',cls:'done'};
+  if(diff===0) return {text:'오늘 마감',cls:'critical'};
+  if(diff<=7) return {text:'D-'+diff,cls:'critical'};
+  if(diff<=30) return {text:'D-'+diff,cls:'high'};
+  return {text:'D-'+diff,cls:'medium'};
+}
+
+function renderGrantCards(list){
+  const wrap = document.getElementById('grant-cards');
+  if(!list.length){wrap.innerHTML='<div class="empty" style="grid-column:1/-1"><p>검색 결과가 없습니다</p></div>';return;}
+  wrap.innerHTML = list.map(g=>{
+    const d = calcDday(g.deadline);
+    return `<div class="card" style="padding:18px;display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+        <div>
+          <div style="font-weight:800;font-size:14px;margin-bottom:4px">${g.name}</div>
+          <div style="font-size:12px;color:var(--muted)">${g.org}</div>
+        </div>
+        <span class="badge ${d.cls}">${d.text}</span>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px">
+        <span class="chip">💰 ${g.max}</span>
+        <span class="chip">${g.type}</span>
+        <span class="chip" style="background:var(--brand-soft);color:var(--brand);border-color:#c5d8fa">${g.tag}</span>
+      </div>
+      <div style="font-size:12px;color:var(--muted)">마감: ${g.deadline}</div>
+      <div style="display:flex;gap:8px;margin-top:4px">
+        <button onclick="switchGrantTab('eligibility',document.querySelectorAll('.grant-tab')[1])" style="flex:1;padding:9px;background:var(--brand);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;min-height:44px">✅ 적합도 체크</button>
+        <button onclick="switchGrantTab('docs',document.querySelectorAll('.grant-tab')[2])" style="flex:1;padding:9px;background:var(--brand-soft);color:var(--brand);border:1px solid #c5d8fa;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;min-height:44px">📋 서류 준비</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterGrants(){
+  const q = document.getElementById('grant-search-input').value.toLowerCase();
+  const filtered = GRANTS.filter(g=>g.name.toLowerCase().includes(q)||g.org.toLowerCase().includes(q)||g.tag.toLowerCase().includes(q));
+  renderGrantCards(filtered);
+}
+
+// eligibility
+function calcEligibility(){
+  const checks = document.querySelectorAll('.elig-check');
+  const total = checks.length;
+  const checked = Array.from(checks).filter(c=>c.checked).length;
+  const pct = Math.round(checked/total*100);
+  const res = document.getElementById('elig-result');
+  let color='var(--red)',bg='var(--red-bg)',msg='신청 어려움';
+  if(pct>=71){color='var(--green)';bg='var(--green-bg)';msg='신청 권장';}
+  else if(pct>=41){color='#c67c00';bg='var(--yellow-bg)';msg='조건 검토 필요';}
+  res.style.background=bg;
+  res.innerHTML=`<div style="font-size:36px;font-weight:900;color:${color}">${pct}%</div><div style="font-size:16px;font-weight:700;color:${color};margin-top:4px">${msg}</div><div style="font-size:12px;color:var(--muted);margin-top:6px">${total}개 기준 중 ${checked}개 충족</div>`;
+}
+
+function resetEligibility(){
+  document.querySelectorAll('.elig-check').forEach(c=>c.checked=false);
+  document.getElementById('elig-result').style.background='#f8f9fb';
+  document.getElementById('elig-result').innerHTML='<div style="font-size:13px;color:var(--muted)">위 항목을 체크하면 적합도가 계산됩니다</div>';
+}
+
+// docs
+const DOC_LIST = ['사업계획서','예산계획서','사업자등록증','재무제표 (최근 1년)','대표자 신분증 사본','매출 증빙 자료','팀 소개서'];
+const docStates = DOC_LIST.map(()=>0); // 0=미착수 1=진행중 2=완료
+
+function renderDocs(){
+  const wrap = document.getElementById('doc-list');
+  const stateInfo = [{label:'미착수',cls:'done',bg:'#f8f9fb'},{label:'진행 중',cls:'high',bg:'var(--yellow-bg)'},{label:'완료',cls:'low',bg:'var(--green-bg)'}];
+  wrap.innerHTML = DOC_LIST.map((d,i)=>{
+    const s = stateInfo[docStates[i]];
+    return `<div onclick="cycleDoc(${i})" style="display:flex;align-items:center;gap:12px;padding:14px;border:1.5px solid var(--border);border-radius:10px;cursor:pointer;background:${s.bg};transition:all .15s" onmouseover="this.style.borderColor='var(--brand)'" onmouseout="this.style.borderColor='var(--border)'">
+      <span style="font-size:20px">${docStates[i]===2?'✅':docStates[i]===1?'🔄':'⬜'}</span>
+      <span style="flex:1;font-weight:600;font-size:14px">${d}</span>
+      <span class="badge ${s.cls}">${s.label}</span>
+    </div>`;
+  }).join('');
+  const done = docStates.filter(s=>s===2).length;
+  const pct = Math.round(done/DOC_LIST.length*100);
+  document.getElementById('doc-pct').textContent = pct+'%';
+  document.getElementById('doc-bar').style.width = pct+'%';
+  document.getElementById('doc-bar').style.background = pct===100?'var(--green)':'var(--brand)';
+}
+
+function cycleDoc(i){
+  docStates[i] = (docStates[i]+1)%3;
+  renderDocs();
+}
+
+function genDraftModal(){
+  const modal = document.getElementById('draft-modal');
+  modal.style.display='flex';
+  document.getElementById('modal-content').textContent = `[사업계획서 초안 — 자동 생성]
+
+■ 회사 소개
+[회사명]은 AI 기반 경영지원 자동화 솔루션을 개발하는 스타트업입니다.
+창립 연도: 2024년 | 대표: [성명] | 소재지: 서울특별시
+핵심 역량: LLM 활용 문서 자동화, 지원사업 서류 자동 구비 시스템
+
+■ 사업 내용
+본 서비스는 스타트업 대표가 모바일에서도 지원사업 서치, 적합도 판단,
+필요 서류 자동 구비, 사업계획서 초안 작성까지 원스톱으로 처리할 수 있는
+AI 기반 플랫폼입니다.
+
+■ 시장 및 목표
+국내 스타트업 약 7만 개사 중 지원사업 활용률 23% — 시스템 부재가 주요 원인
+목표: 3년 내 지원사업 활용률 70% 이상으로 끌어올리는 자동화 인프라 구축
+
+■ 자금 사용 계획
+- 개발 인력 확충: 40%
+- 서버/인프라: 20%
+- 마케팅/파트너십: 25%
+- 운영 예비비: 15%`;
+}
+
+function copyModalContent(){
+  const text = document.getElementById('modal-content').textContent;
+  navigator.clipboard.writeText(text).then(()=>alert('초안이 클립보드에 복사되었습니다!'));
+}
+
+// draft
+function fillDraft(id, text){
+  document.getElementById(id).value = text;
+}
+
+function copyAllDraft(){
+  const sections = ['draft-company','draft-tech','draft-market','draft-fund'];
+  const labels = ['1. 회사 소개','2. 기술/서비스 개요','3. 시장 분석','4. 자금 사용 계획'];
+  const all = sections.map((id,i)=>labels[i]+'\n'+document.getElementById(id).value).join('\n\n');
+  if(!all.trim()){alert('작성된 내용이 없습니다. 먼저 각 섹션을 작성하거나 AI 예시를 채워주세요.');return;}
+  navigator.clipboard.writeText(all).then(()=>alert('전체 초안이 클립보드에 복사되었습니다!'));
+}
+
+// grant tab switch
+function switchGrantTab(id, el){
+  document.querySelectorAll('.grant-section').forEach(s=>s.style.display='none');
+  document.querySelectorAll('.grant-tab').forEach(t=>{
+    t.style.color='var(--muted)';t.style.fontWeight='600';t.style.borderBottomColor='transparent';
+  });
+  document.getElementById('grant-'+id).style.display='block';
+  if(el){el.style.color='var(--brand)';el.style.fontWeight='700';el.style.borderBottomColor='var(--brand)';}
+  if(id==='docs') renderDocs();
+}
+
+// Init
+renderGrantCards(GRANTS);
+renderDocs();
+</script>
+
+<!-- 모바일 하단 탭바 -->
+<nav id="bottom-nav" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--border);padding:6px 0 8px;z-index:200;">
+  <div style="display:flex;justify-content:space-around;align-items:center">
+    <button onclick="showPage('home',null);setBottomActive(this)" class="bnav-btn active" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;border:none;background:none;cursor:pointer;color:var(--brand);padding:4px">
+      <span style="font-size:20px">🏠</span><span style="font-size:10px;font-weight:700">홈</span>
+    </button>
+    <button onclick="showPage('approval',null);setBottomActive(this)" class="bnav-btn" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;border:none;background:none;cursor:pointer;color:var(--muted);padding:4px">
+      <span style="font-size:20px">✅</span><span style="font-size:10px;font-weight:700">승인</span>
+    </button>
+    <button onclick="showPage('grants',null);setBottomActive(this)" class="bnav-btn" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;border:none;background:none;cursor:pointer;color:var(--muted);padding:4px">
+      <span style="font-size:20px">📑</span><span style="font-size:10px;font-weight:700">지원사업</span>
+    </button>
+    <button onclick="showPage('contract',null);setBottomActive(this)" class="bnav-btn" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;border:none;background:none;cursor:pointer;color:var(--muted);padding:4px">
+      <span style="font-size:20px">📄</span><span style="font-size:10px;font-weight:700">계약</span>
+    </button>
+    <button onclick="showPage('kpi',null);setBottomActive(this)" class="bnav-btn" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;border:none;background:none;cursor:pointer;color:var(--muted);padding:4px">
+      <span style="font-size:20px">📊</span><span style="font-size:10px;font-weight:700">KPI</span>
+    </button>
+  </div>
+</nav>
+
+<script>
+function setBottomActive(el){
+  document.querySelectorAll('.bnav-btn').forEach(b=>b.style.color='var(--muted)');
+  el.style.color='var(--brand)';
+}
+// 모바일 감지
+function checkMobile(){
+  const isMobile = window.innerWidth<=768;
+  document.getElementById('bottom-nav').style.display = isMobile?'block':'none';
+  document.querySelector('.sidebar').style.display = isMobile?'none':'';
+  document.querySelector('.main').style.marginLeft = isMobile?'0':'var(--sidebar)';
+  document.querySelector('.content').style.paddingBottom = isMobile?'90px':'';
+}
+checkMobile();
+window.addEventListener('resize',checkMobile);
 </script>
 </body>
 </html>
